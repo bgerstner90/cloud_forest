@@ -12,7 +12,7 @@ mamm<- read.csv(".//elton_traits//bird_mammal_data//MamFuncDat.csv")
 #Read in IUCN data
 all_birds <-read.csv(".//IUCN_data//birds_IUCN.csv")
 all_mammals <-read.csv(".//IUCN_data//mammals_IUCN.csv")
-all_habitat<-read.csv(".//IUCN_data//habitat_by_species.csv")
+all_habitat<-read.csv(".//IUCN_data//habitat_by_species_fixed.csv")
 
 #Combine bird elton traits dataset and IUCN bird data together
 colnames(birds)[which(names(birds) == "Scientific")] <- "scientific_name"
