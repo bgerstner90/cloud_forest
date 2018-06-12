@@ -40,6 +40,9 @@ col_birds_2000_2010_coords_elev_final_full <- cbind(col_birds_2000_2010, col_bir
 #subset the full dataset by elevation 
 col_birds_2000_2010_elev_subset <- subset(col_birds_2000_2010_coords_elev_final_full, SRTM_elevation >= 1000 & SRTM_elevation <=3200)
 
+#sort the data
+col_birds_2000_2010_elev_subset <- col_birds_2000_2010_elev_subset[order(col_birds_2000_2010_elev_subset$SRTM_elevation),] 
+
 #write a new csv file
 setwd("/Users/bethgerstner/Desktop/birds_colombia/co_birds_2000_2010/co_birds_2000_2010")
 
