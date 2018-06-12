@@ -34,10 +34,12 @@ col_birds_2000_2010_coords_elev_final$ID <- NULL
 #reorder columns
 col_birds_2000_2010_coords_elev_final <-col_birds_2000_2010_coords_elev_final[c("long", "lat", "SRTM extracted elevation")]
 
+# Put both GBIF datasets and elevation dataset together 
+col_birds_2000_2010_coords_elev_final_full <- cbind(col_birds_2000_2010, col_birds_2000_2010_coords_elev_final)
+
 #write a new csv file
 
 setwd("/Users/bethgerstner/Desktop/birds_colombia/co_birds_2000_2010/co_birds_2000_2010")
 
 ##make sure you are changing the file name here so we don't overwrite everything
-write.csv(col_birds_2000_2010_coords_elev_final, file="CO_birds_2000_2010_SRTM_elevation.csv")
-
+write.csv(col_birds_2000_2010_coords_elev_final_full, file="CO_birds_2000_2010_SRTM_elevation_full.csv")
