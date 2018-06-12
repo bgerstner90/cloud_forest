@@ -26,20 +26,22 @@ col_birds_2000_2010_coords_elev_final <- cbind(col_birds_2000_2010_coords_elev, 
 head(col_birds_2000_2010_coords_elev_final)
                
 #Rename the elevation column 
-colnames(col_birds_2000_2010_coords_elev_final)[colnames(col_birds_2000_2010_coords_elev_final)=="srtm_1km"] <- "SRTM extracted elevation"
+colnames(col_birds_2000_2010_coords_elev_final)[colnames(col_birds_2000_2010_coords_elev_final)=="srtm_1km"] <- "SRTM_elevation"
 
 #remove ID column
 col_birds_2000_2010_coords_elev_final$ID <- NULL
 
 #reorder columns
-col_birds_2000_2010_coords_elev_final <-col_birds_2000_2010_coords_elev_final[c("long", "lat", "SRTM extracted elevation")]
+col_birds_2000_2010_coords_elev_final <-col_birds_2000_2010_coords_elev_final[c("long", "lat", "SRTM_elevation")]
 
 # Put both GBIF datasets and elevation dataset together 
 col_birds_2000_2010_coords_elev_final_full <- cbind(col_birds_2000_2010, col_birds_2000_2010_coords_elev_final)
 
-#write a new csv file
+#subset the full dataset by elevation 
+col_birds_2000_2010_elev_subset <- subset(col_birds_2000_2010_coords_elev_final_full, SRTM_elevation >= 1000 & SRTM_elevation <=3200)
 
+#write a new csv file
 setwd("/Users/bethgerstner/Desktop/birds_colombia/co_birds_2000_2010/co_birds_2000_2010")
 
 ##make sure you are changing the file name here so we don't overwrite everything
-write.csv(col_birds_2000_2010_coords_elev_final_full, file="CO_birds_2000_2010_SRTM_elevation_full.csv")
+write.csv(col_birds_2000_2010_elev_subset, file="CO_birds_2000_2010_elev_subset.csv")
