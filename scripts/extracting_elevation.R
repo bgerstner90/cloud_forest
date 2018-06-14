@@ -57,3 +57,9 @@ final_data_co_ec <-  final_data[which(final_data$countryCode=='CO' | final_data$
 setwd("/Users/bethgerstner/Desktop/birds_colombia/final_database")
 write.csv(final_data_co_ec, file="Final_CO_EC_database.csv")
 
+##For checking species names: if it has an IUCN status and no Elton trait values, the species name is probably different and you’ll have to look that up.
+##An easy way to do that as a quick check is to load in your elton traits database and then search for the different species name:
+#birds - would be the name of the elton traits file.
+
+species <- birds[which(birds$Scientific=='Cercomacra parkeri'),]
+
