@@ -48,3 +48,12 @@ setwd("/Users/bethgerstner/Desktop/birds_colombia/co_birds_2000_2010/co_birds_20
 
 ##make sure you are changing the file name here so we don't overwrite everything
 write.csv(col_birds_2000_2010_elev_subset, file="CO_birds_2000_2010_elev_subset.csv")
+
+## read in final database
+final_data <- read.csv("/Users/bethgerstner/Desktop/bird_mammal_gbif_elton_IUCN.csv")
+
+final_data_co_ec <-  final_data[which(final_data$countryCode=='CO' | final_data$countryCode=='EC'),] ##if there is a CO or EC in these columns then that means it has GBIF Data
+
+setwd("/Users/bethgerstner/Desktop/birds_colombia/final_database")
+write.csv(final_data_co_ec, file="Final_CO_EC_database.csv")
+
