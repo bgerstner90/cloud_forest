@@ -54,8 +54,15 @@ final_data <- read.csv("/Users/bethgerstner/Desktop/bird_mammal_gbif_elton_IUCN.
 
 final_data_co_ec <-  final_data[which(final_data$countryCode=='CO' | final_data$countryCode=='EC'),] ##if there is a CO or EC in these columns then that means it has GBIF Data
 
+#This is still a large file so we will want to break it into two csv files so that it's easier to work with
+
+final_data_co_ec_1 <- final_data_co_ec[1:895135,]
+
+final_data_co_ec_2 <- final_data_co_ec[895136:1790270,]
+
 setwd("/Users/bethgerstner/Desktop/birds_colombia/final_database")
-write.csv(final_data_co_ec, file="Final_CO_EC_database.csv")
+write.csv(final_data_co_ec_1, file="Final_CO_EC_database_1.csv")
+write.csv(final_data_co_ec_2, file="Final_CO_EC_database_2.csv")
 
 ##For checking species names: if it has an IUCN status and no Elton trait values, the species name is probably different and you’ll have to look that up.
 ##An easy way to do that as a quick check is to load in your elton traits database and then search for the different species name:
