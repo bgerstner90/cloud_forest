@@ -1,5 +1,5 @@
 ## This code is to generate SDMs for the Andean Bear as part of the SROP summer program.
-## Here we process occurrence records obtained from GBIF, filter by distance to remove sampling biases, create and approprate 
+## Here we process occurrence records obtained from GBIF, filter by distance to remove sampling biases, create an appropriate 
 ## study area and use dismo to generate an SDM for the species.
 ## By: Beth Gerstner
 
