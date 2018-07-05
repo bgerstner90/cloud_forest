@@ -2,7 +2,8 @@
 ## Here we process occurrence records obtained from GBIF, filter by distance to remove sampling biases, create and approprate 
 ## study area and use dismo to generate an SDM for the species.
 ## By: Beth Gerstner
-
+install.packages("ENMeval")
+install.packages("spThin")
 library(ENMeval)
 library(rgeos)
 library(dismo)
@@ -13,13 +14,24 @@ library(spThin)
 
 ##Thinning by 10km using library(spThin)
 
-setwd("C:/GIS/Andes/olinguito/Beth/georef_occur_summer15")
+setwd("C://Users//kryms//Desktop//R directory//Cloud_forests")
 
 # Read in all occurrence points from GBIF and thin them by 10km
-occ <- read.csv("C:/GIS/Andes/olinguito/Beth/georef_occur_summer15/localities_csv.csv")
-occ.t <- thin(occ, lat.col = "lat", long.col = "long", spec.col = "species",
-              thin.par=10, reps=1000, locs.thinned.list.return = TRUE, write.files=FALSE)
-sapply(occ.t, nrow) # visually inspected the outputs to see how many records retained in each
+install.packages("jsonlite")
+andean=gbif("Tremarctos", "ornatus", geo=FALSE)
+andean
+write.csv(andean, "andean.csv")
+andean<-read.csv("andean_coordinates.csv")
+andean
+andean_coords<-andean[,c("species","lat","lon")]
+andean_coords
+and.t <-thin(andean_coords,lat.col="lat",long.col="lon", spec.col ="species",
+              thin.par=10, reps=1000, locs.thinned.list.return = TRUE, write.files=TRUE, max.files = 5, 
+             out.dir = "//Cloud_forests", out.base = "andean_thinned", 
+             write.log.file = TRUE,
+             log.file = "andean_thinned.csv" )
+??spThin
+sapply(andean_coords, nrow) # visually inspected the outputs to see how many records retained in each
 max(sapply(occ.t, nrow))  # check what max number of output thinned records is
 occ <- occ.t[[1]]  # assign thinned records to first dataset because all had 16 records
 ##File used for analysis: occ <- read.csv("/Volumes/BETH'S DRIV/Anderson_Lab_Archive/georef_occur_summer15/10km_thin/thinned_data_thin1.csv") 
