@@ -2,11 +2,24 @@
 
 library(raster)
 
-#read in elevation raster 
+#read in elevation rasster 
 elev <- raster("/Users/bethgerstner/Desktop/srtm_1km.tif")
 
 #read in latitude longitude data
 col_birds_2000_2010<-read.csv("/Users/bethgerstner/Desktop/birds_colombia/co_birds_2000_2010/co_birds_2000_2010/co_birds_2000_2010_occurrence.csv")
+col_bird_species_lisR <- col_birds_2000_2010$scientificName
+
+##remove parenthesis 
+
+bub <-gsub(" \\(.*\\)","",col_bird_species_lisR )
+
+##col_birds_2000_2010$scientific_name_sl <- do.call(paste, c(col_birds_2000_2010[c("genus", "specificEpithet")], sep = " ")) 
+##unique_names <-unique(col_birds_2000_2010$scientific_name_sl)
+###head(unique_names)
+        
+#####write.csv(unique_names, file="species_list_GBIF.csv")
+
+#####no_match <- unique_names$unique_names[!birds$Scientific %in% unique_names$unique_names]
 
 #Extract only the columns that we want (coordinates)
 ##I changed the column names for the coordinates to say long and lat
@@ -69,4 +82,4 @@ write.csv(final_data_co_ec_2, file="Final_CO_EC_database_2.csv")
 #birds - would be the name of the elton traits file.
 
 species <- birds[which(birds$Scientific=='Cercomacra parkeri'),]
-
+Amaurospiza concolor
