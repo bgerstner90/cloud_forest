@@ -35,6 +35,8 @@ projection(richness2) <- "+proj=longlat +ellps=WGS84"
 # cell-based 'species richness' map
 plot(richness2, col=rev(heat.colors(max(richness$x)))) 
 
+writeRaster(richness2, "insert path here with filename.tif" )
+
 #you can also play around with a moving window type add-on, in this case averaging the richness scores 
 #for a given cell using the surrounding set of cells, to even out idiosyncrasies of how records are assigned to one cell or another
 #plot(focal(richness2, w=matrix(1,3,3), fun=mean, na.rm=TRUE), col=rev(heat.colors(max(richness$x)))) 
