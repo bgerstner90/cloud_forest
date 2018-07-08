@@ -1,9 +1,18 @@
+setwd("/Users/Student/Desktop/cloud_forest-master/scripts")
+
 ## This code is to generate SDMs for the Andean Bear as part of the SROP summer program.
-## Here we process occurrence records obtained from GBIF, filter by distance to remove sampling biases, create an appropriate 
+## Here we process occurrence records obtained from GBIF, filter by distance to remove sampling biases, create and approprate 
 ## study area and use dismo to generate an SDM for the species.
 ## By: Beth Gerstner
+install.packages("ENMeval","rgeos","dismo","rgdal","raster","spThin","jsonlite")
 install.packages("ENMeval")
 install.packages("spThin")
+install.packages("rgeos")
+install.packages("dismo")
+install.packages("rgdal")
+install.packages("raster")
+install.packages("spThin")
+install.packages("jsonlite")
 library(ENMeval)
 library(rgeos)
 library(dismo)
@@ -14,7 +23,7 @@ library(spThin)
 
 ##Thinning by 10km using library(spThin)
 
-setwd("C://Users//kryms//Desktop//R directory//Cloud_forests")
+
 
 # Read in all occurrence points from GBIF and thin them by 10km
 install.packages("jsonlite")
@@ -26,38 +35,42 @@ andean
 andean_coords<-andean[,c("species","lat","lon")]
 andean_coords
 and.t <-thin(andean_coords,lat.col="lat",long.col="lon", spec.col ="species",
-              thin.par=10, reps=1000, locs.thinned.list.return = TRUE, write.files=TRUE, max.files = 5, 
-             out.dir = "//Cloud_forests", out.base = "andean_thinned", 
+             thin.par=10, reps=1000, locs.thinned.list.return = TRUE, write.files=TRUE, max.files = 5, 
+             out.dir = "/Users/Student/Desktop/cloud_forest-master/scripts", out.base = "andean_thinned", 
              write.log.file = TRUE,
              log.file = "andean_thinned.csv" )
-??spThin
-sapply(andean_coords, nrow) # visually inspected the outputs to see how many records retained in each
-max(sapply(occ.t, nrow))  # check what max number of output thinned records is
-occ <- occ.t[[1]]  # assign thinned records to first dataset because all had 16 records
+sapply(and.t, nrow) # visually inspected the outputs to see how many records retained in each
+max(sapply(and.t, nrow))  # check what max number of output thinned records is
+and <- and.t[[1]]  # assign thinned records to first dataset because all had 16 records
+and
 ##File used for analysis: occ <- read.csv("/Volumes/BETH'S DRIV/Anderson_Lab_Archive/georef_occur_summer15/10km_thin/thinned_data_thin1.csv") 
-occ.sp <- SpatialPointsDataFrame(occ[c(1,2)], as.data.frame(occ[,1])) #Makes into spatial object
-
+and.sp <- SpatialPointsDataFrame(and[c(1,2)], as.data.frame(and[,1])) #Makes into spatial object
+env <- getData("worldclim",var="bio",res=10) #get bioclim variables from WorldClim website
+env
 # Set working directory to folder where environmental data is stored 
 setwd("/Volumes/BETH'S DRIV/Anderson_Lab_Archive/Worldclim/Full")
 
 # Making stack of all 19 bioclimatic variables
-env <- list.files(pattern='bil', full.names=TRUE)
+env_1 <- list.files(pattern='bil', full.names=TRUE)
+env_1
 # env <-env[-16]
 env <- stack(env)
-
+plot(env[[1]])
 ## Crop extent to a smaller region so it is easier to work with
 # 5 degree bounding box buffer around occurrence records
-extentlarge <- gBuffer(occ.sp, width=5)
+extentlarge <- gBuffer(and.sp, width=5)
+
 # Crop and mask environmental variables by the larger extent
 env_crop <- crop(env, extentlarge)
+plot(env_crop[[1]])
 env_msk <- mask(env_crop, extentlarge)
 env_msk
 plot(env_crop[[1]])
 plot(env_msk[[1]])
-points(occ.sp, col="red", cex=0.6)
-
+points(and.sp, col="red", cex=0.6)
+points(backg.env, col="blue", cex=0.6)
 # Generate 0.7 degree buffered 'crop circle' around occurrence points
-backg_extent <- gBuffer(occ.sp, width=0.7)
+backg_extent <- gBuffer(and.sp, width=0.7)
 # Crop and mask environmental variables by the 'crop circle' extent
 env_crop_bg <- crop(env_msk, backg_extent)
 env_msk_bg <- mask(env_crop_bg, backg_extent)
@@ -71,13 +84,13 @@ backg.env <- randomPoints(env_msk_bg[[1]], n=10000, excludep=FALSE)
 
 #_________________________________________________________________________________________
 ##Model Tuning (choosing the best predictive model)
-
+??ENMeval
 setwd("C:/Users/Beth/Desktop/ENM_eval")
 # ENMeval using written background coordinates
-Jackknife_results <- ENMevaluate(occ2, env_crop, bg.coords = backg.env, 
+Kfold_results <- ENMevaluate(and.sp, env_crop, bg.coords = backg.env, 
                                  RMvalues = seq(0.5, 4, 0.5), 
                                  fc = c("L", "LQ", "LQH", "H"),
-                                 method = 'jackknife', parallel=TRUE)
+                                 method = 'randomkfold', parallel=TRUE)
 
 # Calls results table
 x <- Jackknife_results@results
